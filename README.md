@@ -1,3 +1,3 @@
 # pokedata
 
-## Pokemon Datasets & Analysis
+Pokemon Analytics
