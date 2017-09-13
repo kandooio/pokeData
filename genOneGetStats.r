@@ -22,6 +22,7 @@ baseStats <-as.data.frame(html_table(getNode('https://bulbapedia.bulbagarden.net
 baseStats <- baseStats[!duplicated(baseStats$X.),]
 names(baseStats)[names(baseStats) == "X."] = "id"
 baseStats <- baseStats %>% select(-Var.2)
+baseStats$Pokémon <- gsub(' (.*)','',baseStats$Pokémon)
 
 # Create a seperate custom function to return specific tabular data as a list from each
 # pokemon's entry on bulbapedia
@@ -82,7 +83,6 @@ baseStats$catch_rate_index <- as.numeric(gsub(' (.*)','',baseStats$catch_rate))
   
 
 
-# Import the evolution table from pokemondb.net
-
+# Evolution Tables
 evoTable <-as.data.frame(html_table(getNode('https://pokemondb.net/evolution/level','//table[@id="evolution"]'),
                                       fill = TRUE))
