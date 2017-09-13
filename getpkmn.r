@@ -29,7 +29,7 @@ baseStats$Pokémon <- gsub(' ','_',baseStats$Pokémon)        # Replace remainin
 # pokemon's entry on bulbapedia
 # The poketable function allows you to input a pokemon name, 
 # and the appropriate bulbapedia page is crawled for html data
-pokeTable <- function(pkmn, tableNo,row,col) {
+pokeTable <- function(pkmn, tableNo, row, col) {
   require(rvest)
   url <-
     paste('https://bulbapedia.bulbagarden.net/wiki/',
