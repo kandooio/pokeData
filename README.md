@@ -1,3 +1,3 @@
-# pokedata
+# pokeData
 
-Pokemon Analytics
+Pokemon Analytics using R
