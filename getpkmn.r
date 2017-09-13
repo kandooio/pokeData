@@ -1,4 +1,4 @@
-# getpkmn.r
+# genOneGetStats.r
 # A script for pulling various data points for Generation I pokemon via Bulbapedia
 # by Reuben Kandiah
 
@@ -19,11 +19,11 @@ baseStats <-as.data.frame(html_table(getNode('https://bulbapedia.bulbagarden.net
                                      fill = TRUE))
 
 # Clean the baseStats table to remove odd data points
-baseStats <- baseStats[!duplicated(baseStats$X.),]
-names(baseStats)[names(baseStats) == "X."] = "id"
-baseStats <- baseStats %>% select(-Var.2)
-baseStats$Pokémon <- gsub(' \\((.*)','',baseStats$Pokémon)
-baseStats$Pokémon <- gsub(' ','_',baseStats$Pokémon)
+baseStats <- baseStats[!duplicated(baseStats$X.),]          # Remove duplicate ids
+names(baseStats)[names(baseStats) == "X."] = "id"           # Rename "X." to "id"
+baseStats <- baseStats %>% select(-Var.2)                   # Remove empty "Var.2"
+baseStats$Pokémon <- gsub(' \\((.*)','',baseStats$Pokémon)  # Remove bracket suffixes from pkmn name
+baseStats$Pokémon <- gsub(' ','_',baseStats$Pokémon)        # Replace remaining " " with "_" for url query
 
 # Create a seperate custom function to return specific tabular data as a list from each
 # pokemon's entry on bulbapedia
