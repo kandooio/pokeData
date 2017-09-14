@@ -4,7 +4,8 @@
 
 # In the first instance we will need to create a dataframe of the Base Stats for Generation I pkmn
 # This can be done using the rvest package which I will call using the custom function "GetNode"
-
+library(RCurl)
+library(rvest)
 library(tidyverse)
 
 # Initialise getNode function
@@ -39,7 +40,7 @@ pokeTable <- function(pkmn, tableNo, row, col) {
   file <- read_html(url)
   tables <- html_nodes(file, "table")
   data <-
-   as.data.frame(html_table(tables[tableNo], fill = TRUE))
+    as.data.frame(html_table(tables[tableNo], fill = TRUE))
   data <- data[row,col]
   return(data)
 }
@@ -69,21 +70,22 @@ baseStats$catch_rate <- catch_rate[,1]
 baseStats$height <- as.numeric(gsub(' m','',baseStats$height))
 baseStats$weight <- as.numeric(gsub(' kg','',baseStats$weight))
 baseStats$catch_rate_index <- as.numeric(gsub(' (.*)','',baseStats$catch_rate))
+baseStats$hatch_time <- gsub('step(.*)','',baseStats$hatch_time)
+baseStats$hatchTimeMin <- as.numeric(gsub('.-(.*)','',baseStats$hatch_time))
+baseStats$hatchTimeMax <- as.numeric(gsub('(.*)-','',gsub(intToUtf8(160),'',gsub('.(.*)-.','',baseStats$hatch_time))))
+
+ 
 
 # Some sort of ggplot
-# ggplot(data=baseStats,aes(x=reorder(type1,-HP,FUN=median),y=HP,fill=as.factor(type1))) + 
-#   theme_minimal() +
-#   stat_boxplot(geom="errorbar",width=0.5) + 
-#   geom_boxplot(group=1) +
-#   theme(legend.position="bottom",axis.text.x = element_text(angle=60, hjust=1)) +
-#   ylim(low=0,high=150) +
-#   labs(x="Type 1",y="HP Base Stats") +
-#   ggtitle("Distribution of Base HP Stats by Type 1 (Gen I)")
-#   geom_bar(data=baseStats,aes(x=reorder(type1,-HP,FUN=mean),y=median(HP)),stat="identity")
+ggplot(data=baseStats,aes(x=reorder(type1,-HP,FUN=median),y=HP,fill=as.factor(type1))) +
+  theme_minimal() +
+  stat_boxplot(geom="errorbar",width=0.5) +
+  geom_boxplot(group=1) +
+  theme(legend.position="bottom",axis.text.x = element_text(angle=60, hjust=1)) +
+  ylim(low=0,high=150) +
+  labs(x="Type 1",y="HP Base Stats") +
+  ggtitle("Distribution of Base HP Stats by Type 1 (Gen VII-Present)")
+  geom_bar(data=baseStats,aes(x=reorder(type1,-HP,FUN=mean),y=median(HP)),stat="identity")
 
-  
-
-
-# Evolution Tables
-evoTable <-as.data.frame(html_table(getNode('https://pokemondb.net/evolution/level','//table[@id="evolution"]'),
-                                      fill = TRUE))
+setwd("C:/Users/rariyaratnam/Documents/Training")
+write.csv(baseStats,"pkmn_basestats.csv",row.names=FALSE)
